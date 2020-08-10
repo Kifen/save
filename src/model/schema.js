@@ -7,7 +7,7 @@ const schema = buildSchema(`
         lend(asset: String!, amount: Float!): Boolean
         getBalance(asset: String!): String
         getExchangeRate(asset: String!): String
-        redeem(asset: String, amount: Int!): String
+        redeem(asset: String, amount: Float!): String
     }
 `);
 
