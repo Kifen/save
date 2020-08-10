@@ -41,13 +41,20 @@ const lend = async ({ asset, amount }) => {
   }
 };
 
-const getBalance = async ({ asset }) => {
+const getEthBalance = async ({ asset }) => {
   const cTokenContract = utils.generateCTokenontract(asset);
   const balanceOfUnderlying = await cTokenContract.methods
     .balanceOfUnderlying(walletAddress)
     .call();
 
   return web3.utils.fromWei(balanceOfUnderlying, "ether");
+};
+
+const getCTokenBalance = async ({ asset }) => {
+  const cTokenContract = utils.generateCTokenontract(asset);
+  let balance = await cTokenContract.methods.balanceOf(walletAddress).call();
+  balance = balance / 1e8;
+  return balance;
 };
 
 const getExchangeRate = async ({ asset }) => {
@@ -58,9 +65,10 @@ const getExchangeRate = async ({ asset }) => {
   return exchangeRate / 1e28;
 };
 
-const redeem = async (obj) => {
+const redeem = async ({ asset, amount }) => {
   try {
-    await cETHContract.methods.redeem(obj.amount * 1e8).send({
+    const cTokenContract = utils.generateCTokenontract(asset);
+    await cTokenContract.methods.redeem(amount * 1e8).send({
       from: walletAddress,
       gasLimit: web3.utils.toHex(150000),
       gasPrice: web3.utils.toHex(20000000000),
@@ -73,7 +81,8 @@ const redeem = async (obj) => {
 module.exports = {
   supplyRatePerBlock,
   lend,
-  getBalance,
+  getEthBalance,
+  getCTokenBalance,
   getExchangeRate,
   redeem,
 };
