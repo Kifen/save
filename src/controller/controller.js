@@ -13,8 +13,8 @@ const supplyRatePerBlock = async ({ asset }) => {
 
 const lend = async ({ asset, amount }) => {
   const nonce = await web3.eth.getTransactionCount(walletAddress);
-  const cTokencontract = utils.generateCTokenontract(asset);
-  const underlyingAssetAddress = contract.methods.underlying().call();
+  const cTokencontract = utils.generateCTokenontract(asset, web3);
+  const underlyingAssetAddress = cTokencontract.methods.underlying().call();
   const erc20Contract = utils.generateERC20Contract(underlyingAssetAddress);
 
   if (asset != "cETH") {
@@ -67,8 +67,8 @@ const getExchangeRate = async ({ asset }) => {
 
 const redeem = async ({ asset, amount }) => {
   try {
-    const cTokenContract = utils.generateCTokenontract(asset);
-    await cTokenContract.methods.redeem(amount * 1e8).send({
+    const cTokenContract = utils.generateCTokenontract(asset, web3);
+    const result = await cTokenContract.methods.redeem(amount * 1e8).send({
       from: walletAddress,
       gasLimit: web3.utils.toHex(150000),
       gasPrice: web3.utils.toHex(20000000000),
@@ -78,6 +78,11 @@ const redeem = async ({ asset, amount }) => {
   }
 };
 
+const walletBalance = async () => {
+  const balance = await web3.eth.getBalance(walletAddress);
+  return web3.utils.fromWei(balance, "ether");
+};
+
 module.exports = {
   supplyRatePerBlock,
   lend,
@@ -85,4 +90,5 @@ module.exports = {
   getCTokenBalance,
   getExchangeRate,
   redeem,
+  walletBalance,
 };

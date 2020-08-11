@@ -3,10 +3,11 @@ const address = require("../config/address.json");
 const Web3 = require("web3");
 const web3 = new Web3(process.env.RPC_URL);
 
-const generateCTokenontract = (asset) => {
+const generateCTokenontract = (asset, w) => {
+  const w3 = w ? w : web3;
   const contractAbi = abi.cToken;
   const contractAddress = address.cToken.rinkeby[asset];
-  return new web3.eth.Contract(contractAbi, contractAddress);
+  return new w3.eth.Contract(contractAbi, contractAddress);
 };
 
 const generateERC20Contract = (address) => {

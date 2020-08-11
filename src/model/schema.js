@@ -9,6 +9,7 @@ const schema = buildSchema(`
         getCTokenBalance(asset: String!): String
         getExchangeRate(asset: String!): String
         redeem(asset: String, amount: Float!): String
+        getWalletBalance: String
     }
 `);
 
@@ -19,6 +20,7 @@ const root = {
   getCTokenBalance: controller.getCTokenBalance,
   getExchangeRate: controller.getExchangeRate,
   redeem: controller.redeem,
+  getWalletBalance: controller.walletBalance,
 };
 
 module.exports = {
