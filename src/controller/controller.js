@@ -14,8 +14,14 @@ const supplyRatePerBlock = async ({ asset }) => {
 const lend = async ({ asset, amount }) => {
   const nonce = await web3.eth.getTransactionCount(walletAddress);
   const cTokencontract = utils.generateCTokenontract(asset, web3);
-  const underlyingAssetAddress = cTokencontract.methods.underlying().call();
+
+  const underlyingAssetAddress = await cTokencontract.methods
+    .underlying()
+    .call();
+
+  console.log("DONE...");
   const erc20Contract = utils.generateERC20Contract(underlyingAssetAddress);
+  console.log(erc20Contract.methods);
 
   if (asset != "cETH") {
     const approved = await erc20Contract.methods.approve(

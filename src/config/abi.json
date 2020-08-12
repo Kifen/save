@@ -1,5 +1,5 @@
 {
-  "ERC20Abi": [
+  "ERC20": [
     {
       "constant": true,
       "inputs": [],
